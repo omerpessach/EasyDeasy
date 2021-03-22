@@ -1,8 +1,7 @@
 from datetime import date
 
 from django.db.models import Model, CASCADE, CharField, DateField, IntegerField, ManyToManyField, ForeignKey, ImageField
-
-from easydeasy_rest.utils.utils import parse_image_name_from_path
+from .utils import parse_image_name_from_path
 
 """
 

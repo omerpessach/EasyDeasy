@@ -6,11 +6,4 @@ def parse_image_name_from_path(path: str) -> str:
     """
     last_index = path.rfind('/')
 
-    # found occurrence of '/'
-    if last_index:
-        name = path[last_index + 1:]
-    else:
-        name = ""
-
-    return name
-
+    return path[last_index + 1:] if last_index else ""
