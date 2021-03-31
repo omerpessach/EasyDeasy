@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'corsheaders',
+    'account',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -129,7 +130,14 @@ CORS_URLS_REGEX = r'^/api/.*$'
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join(BASE_DIR, 'media')
+]
 
+STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media_cdn')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_cdn')
+
