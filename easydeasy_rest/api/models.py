@@ -24,6 +24,7 @@ Simple flow ->
 
 
 # todo - Add Research model
+# todo - research about default category image, is it a good or even an OK method?
 
 
 class Site(Model):
