@@ -1,9 +1,10 @@
 from django.test import TestCase
 from api.models import Category, Feed, Article, Disease, Site
+from datetime import date
 
 
 """
-todo
+These tests are for api.models Models.
 """
 
 
@@ -13,7 +14,6 @@ class CategoryTestCase(TestCase):
         self.category = Category.objects.create(name='Category')
 
     def test_category_name(self):
-
         self.assertTrue(isinstance(self.category, Category))
         self.assertEqual(self.category.name, 'Category')
 
@@ -36,6 +36,11 @@ class FeedTestCase(TestCase):
 
     def test_feed_update_time(self):
         self.assertEqual(self.feed.update_time, 6)
+
+    def test_default_params(self):
+        feed = Feed.objects.create(url='www.site/feed.com', missing_fields='I,S', source_site=self.site)
+
+        self.assertEqual(feed.update_time, 24)
 
 
 class SiteTestCase(TestCase):
@@ -70,9 +75,6 @@ class ArticleTestCase(TestCase):
 
     def setUp(self) -> None:
         self.site = Site.objects.create(name='Site', url='www.site.com')
-        self.category = Category.objects.create(name='Category')
-        self.disease = Disease.objects.create(name='Disease', category=self.category)
-
         self.article = Article.objects.create(title='title',
                                               url='www.site/articles/1.com',
                                               summary='this is the summary',
@@ -107,6 +109,19 @@ class ArticleTestCase(TestCase):
 
     def test_article_shares(self):
         self.assertEqual(self.article.shares, 1)
+
+    def test_default_params(self):
+        article = Article.objects.create(title='title',
+                                         url='www.site/articles/1.com',
+                                         summary='this is the summary',
+                                         source_site=self.site)
+
+        self.assertEqual(article.time_to_read, 5)
+        self.assertEqual(article.published_date, date.today())
+        self.assertEqual(article.views, 0)
+        self.assertEqual(article.likes, 0)
+        self.assertEqual(article.clicks, 0)
+        self.assertEqual(article.shares, 0)
 
     def test_str(self):
         self.assertEqual(str(self.article), 'title')
