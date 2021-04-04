@@ -1,7 +1,8 @@
 from datetime import date
 
 from django.db.models import Model, CASCADE, CharField, DateField, IntegerField, ManyToManyField, ForeignKey, ImageField
-from .utils import parse_image_name_from_path
+from api.utils import parse_image_name_from_path
+
 
 """
 
@@ -79,7 +80,7 @@ class Article(Model):
     diseases = ManyToManyField(Disease)
 
     def __str__(self):
-        return f'{self.title} - {self.summary[:30]}...'
+        return self.title
 
     class Meta:
         """
