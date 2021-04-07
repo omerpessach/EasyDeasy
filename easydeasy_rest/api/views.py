@@ -36,15 +36,8 @@ class DiseaseViewSet(ModelViewSet):
 
         page = pagination.paginate_queryset(article_queryset, request)
 
-        # Checks if we even got a page
-        if page:
-            serializer = ArticleSerializer(page, many=True, context={'request': request})
-            return pagination.get_paginated_response(serializer.data)
-
-        # Creates the serializer making sure that we get the correct url path for the images
-        serializer = ArticleSerializer(article_queryset, many=True, context={'request': request})
-
-        return Response(serializer.data)
+        serializer = ArticleSerializer(page, many=True, context={'request': request})
+        return pagination.get_paginated_response(serializer.data)
 
 
 class ArticleViewSet(ModelViewSet):
