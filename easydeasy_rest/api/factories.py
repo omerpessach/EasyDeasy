@@ -36,14 +36,14 @@ class DiseaseFactory(factory.django.DjangoModelFactory):
                                    'Liver cancer', 'Kidney cancer', 'IBS', 'Leukemia', 'Autism', 'Epilepsy',
                                    'Gluten allergy', 'Lactose Intolerance'])
 
-    category = factory.SubFactory(CategoryFactory)
+    category = factory.Iterator(Category.objects.all())
 
 
 class ArticleFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Article
 
-    source_site = factory.SubFactory(SiteFactory)
+    source_site = factory.Iterator(Site.objects.all())
 
     title = factory.LazyAttribute(lambda _: f'article_{random.randrange(1000)}')
     url = factory.LazyAttribute(lambda article: f'www.{article.source_site.name}/articles/{article.title}.com')

@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from api.factories import ArticleFactory, DiseaseFactory
+from api.factories import ArticleFactory, DiseaseFactory, CategoryFactory, SiteFactory
 from api.models import Disease
 import random
 from django.db.utils import IntegrityError
@@ -10,7 +10,9 @@ from django.db.utils import IntegrityError
 # region consts
 
 ARTICLE_AMOUNT = 50
-DISEASE_AMOUNT = 25
+DISEASE_AMOUNT = 15
+SITE_AMOUNT = 10
+CATEGORY_AMOUNT = 7
 
 # endregion
 
@@ -19,7 +21,12 @@ class Command(BaseCommand):
     help = 'Fills the database.'
 
     def handle(self, *args, **options):
+        self.call_factory(CategoryFactory, CATEGORY_AMOUNT)
+
         self.call_factory(DiseaseFactory, DISEASE_AMOUNT)
+
+        self.call_factory(SiteFactory, SITE_AMOUNT)
+
         self.call_factory(ArticleFactory, ARTICLE_AMOUNT, is_article=True)
 
     @staticmethod
