@@ -2,8 +2,8 @@ from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from .models import Category, DefaultCategoryImage, Feed, Site, Disease, Article
-from .serializers import DefaultCategoryImageSerializer, SiteSerializer, DiseaseSerializer, ArticleSerializer, \
+from .models import Category, Feed, Site, Disease, Article
+from .serializers import SiteSerializer, DiseaseSerializer, ArticleSerializer, \
     FeedSerializer, CategorySerializer
 
 
@@ -48,12 +48,6 @@ class ArticleViewSet(ModelViewSet):
 class FeedViewSet(ModelViewSet):
     queryset = Feed.objects.all()
     serializer_class = FeedSerializer
-
-
-class DefaultCategoryImageViewSet(ModelViewSet):
-    queryset = DefaultCategoryImage.objects.all()
-    serializer_class = DefaultCategoryImageSerializer
-
 
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()

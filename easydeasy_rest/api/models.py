@@ -99,15 +99,3 @@ class Feed(Model):
     update_time = IntegerField(default=24)
 
     source_site = ForeignKey(Site, on_delete=CASCADE)
-
-
-class DefaultCategoryImage(Model):
-    """
-    Default image for a category
-    """
-    image = ImageField(upload_to='images/')
-
-    category = ForeignKey(Category, on_delete=CASCADE)
-
-    def __str__(self):
-        return parse_image_name_from_path(self.image.name)
