@@ -8,7 +8,7 @@ These tests are for api.models Models.
 """
 
 
-class CategoryTestCase(TestCase):
+class CategoryModelTestCase(TestCase):
 
     def setUp(self) -> None:
         self.category = Category.objects.create(name='Category')
@@ -21,7 +21,7 @@ class CategoryTestCase(TestCase):
         self.assertEqual(str(self.category), 'Category')
 
 
-class FeedTestCase(TestCase):
+class FeedModelTestCase(TestCase):
 
     def setUp(self) -> None:
         self.site = Site.objects.create(name='Site', url='www.site.com')
@@ -43,7 +43,7 @@ class FeedTestCase(TestCase):
         self.assertEqual(feed.update_time, 24)
 
 
-class SiteTestCase(TestCase):
+class SiteModelTestCase(TestCase):
 
     def setUp(self) -> None:
         self.site = Site.objects.create(name='Site', url='www.site.com')
@@ -58,7 +58,7 @@ class SiteTestCase(TestCase):
         self.assertEqual(str(self.site), 'Site')
 
 
-class DiseaseTestCase(TestCase):
+class DiseaseModelTestCase(TestCase):
 
     def setUp(self) -> None:
         self.category = Category.objects.create(name='Category')
@@ -71,7 +71,7 @@ class DiseaseTestCase(TestCase):
         self.assertEqual(str(self.disease), 'Disease')
 
 
-class ArticleTestCase(TestCase):
+class ArticleModelTestCase(TestCase):
 
     def setUp(self) -> None:
         self.site = Site.objects.create(name='Site', url='www.site.com')
@@ -111,9 +111,9 @@ class ArticleTestCase(TestCase):
         self.assertEqual(self.article.shares, 1)
 
     def test_default_params(self):
-        article = Article.objects.create(title='title',
-                                         url='www.site/articles/1.com',
-                                         summary='this is the summary',
+        article = Article.objects.create(title='another title',
+                                         url='www.website/articles/1.com',
+                                         summary='this is summary',
                                          source_site=self.site)
 
         self.assertEqual(article.time_to_read, 5)
