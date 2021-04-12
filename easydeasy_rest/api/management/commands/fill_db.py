@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from api.factories import ArticleFactory, DiseaseFactory, CategoryFactory, SiteFactory
+from api.factories import ArticleFactory, DiseaseFactory, CategoryFactory, SiteFactory, FeedFactory
 from api.models import Disease
 import random
 from django.db.utils import IntegrityError
@@ -12,6 +12,7 @@ from django.db.utils import IntegrityError
 ARTICLE_AMOUNT = 50
 DISEASE_AMOUNT = 15
 SITE_AMOUNT = 10
+FEED_AMOUNT = 20
 CATEGORY_AMOUNT = 7
 
 # endregion
@@ -26,6 +27,8 @@ class Command(BaseCommand):
         self.call_factory(DiseaseFactory, DISEASE_AMOUNT)
 
         self.call_factory(SiteFactory, SITE_AMOUNT)
+
+        self.call_factory(FeedFactory, FEED_AMOUNT)
 
         self.call_factory(ArticleFactory, ARTICLE_AMOUNT, is_article=True)
 

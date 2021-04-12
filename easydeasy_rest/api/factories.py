@@ -6,6 +6,7 @@ import random
 # region consts
 
 TIME_TO_READ_AMOUNT = range(1, 15)
+UPDATE_TIME_AMOUNT = range(1, 168)
 SOCIAL_AMOUNT = range(100)
 
 
@@ -72,4 +73,10 @@ class FeedFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Feed
 
-    # todo
+    url = factory.LazyAttribute(lambda feed: f'www.{feed.source_site}/feeds/{random.randrange(1000)}.com')
+    missing_fields = factory.LazyAttribute(lambda feed: ','.join(random.choices(['I', 'S', 'T'])))
+    update_time = factory.Faker('random_element', elements=UPDATE_TIME_AMOUNT)
+
+    source_site = factory.Iterator(Site.objects.all())
+
+
