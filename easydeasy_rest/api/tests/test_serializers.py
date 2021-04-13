@@ -24,7 +24,6 @@ class CategorySerializersTests(APITestCase):
     def test_valid(self):
         serializer = CategorySerializer(data=self.category_data)
 
-        # Makes sure we can create the site with this data
         self.assertTrue(serializer.is_valid())
 
     def test_display_serializer(self):
@@ -39,6 +38,7 @@ class FeedSerializersTests(APITestCase):
 
     def setUp(self):
         self.source_site = Site.objects.create(name='site', url='www.mysite.com')
+
         self.feed_data = {'url': 'www.site/feeds/my-feed.com',
                           'missing_fields': 'I',
                           'update_time': 10,
@@ -52,7 +52,6 @@ class FeedSerializersTests(APITestCase):
     def test_valid(self):
         serializer = FeedSerializer(data=self.feed_data)
 
-        # Makes sure we can create the site with this data
         self.assertTrue(serializer.is_valid())
 
     def test_display_serializer(self):
@@ -65,6 +64,66 @@ class FeedSerializersTests(APITestCase):
         self.assertEquals(feed_data['update_time'], self.feed_data['update_time'])
         self.assertEquals(feed_data['source_site'], self.feed_data['source_site'])
 
+
+# class ArticleSerializersTests(APITestCase):
+#
+#     def setUp(self):
+#         self.source_site = Site.objects.create(name='site', url='www.mysite.com')
+#         self.feed_data = {'url': 'www.site/feeds/my-feed.com',
+#                           'missing_fields': 'I',
+#                           'update_time': 10,
+#                           'source_site': self.source_site.pk}
+#
+#         self.feed = Feed.objects.create(**self.feed_data | {'source_site': self.source_site})
+#
+#     def test_contains_expected_fields(self):
+#         self.assertCountEqual(set(self.feed_data.keys()), {'url', 'missing_fields', 'update_time', 'source_site'})
+#
+#     def test_valid(self):
+#         serializer = FeedSerializer(data=self.feed_data)
+#
+#         # Makes sure we can create the site with this data
+#         self.assertTrue(serializer.is_valid())
+#
+#     def test_display_serializer(self):
+#         display_serializer = FeedSerializer(self.feed)
+#
+#         feed_data = display_serializer.data
+#
+#         self.assertEquals(feed_data['url'], self.feed_data['url'])
+#         self.assertEquals(feed_data['missing_fields'], self.feed_data['missing_fields'])
+#         self.assertEquals(feed_data['update_time'], self.feed_data['update_time'])
+#         self.assertEquals(feed_data['source_site'], self.feed_data['source_site'])
+
+
+class DiseaseSerializersTests(APITestCase):
+
+    def setUp(self):
+        self.category = Category.objects.create(name='disease_category')
+
+        self.disease_data = {'name': 'test_disease',
+                             'category': self.category.pk}
+
+        self.disease = Disease.objects.create(**self.disease_data | {'category': self.category})
+
+    def test_contains_expected_fields(self):
+        self.assertCountEqual(set(self.disease_data.keys()), {'name', 'category'})
+
+    def test_valid(self):
+        serializer = DiseaseSerializer(data=self.disease_data | {'name': 'different_disease'})
+        non_unique_serializer = DiseaseSerializer(data=self.disease_data)
+
+        print(self.disease_data)
+        self.assertTrue(serializer.is_valid())
+        self.assertFalse(non_unique_serializer.is_valid())
+
+    def test_display_serializer(self):
+        display_serializer = DiseaseSerializer(self.disease)
+
+        disease_data = display_serializer.data
+
+        self.assertEquals(disease_data['name'], self.disease_data['name'])
+        self.assertEquals(disease_data['category'], self.disease_data['category'])
 
 
 
