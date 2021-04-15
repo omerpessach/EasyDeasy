@@ -32,7 +32,7 @@ class Site(Model):
     """
     Supported sites which we aggregate information from
     """
-    name = CharField(max_length=64)
+    name = CharField(max_length=64, unique=True)
     url = CharField(max_length=256)
 
     def __str__(self):
@@ -43,7 +43,7 @@ class Category(Model):
     """
     Contains diseases and defaults images
     """
-    name = CharField(max_length=64)
+    name = CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
@@ -66,8 +66,8 @@ class Article(Model):
     Used for displaying all the information on the front, being POSTed by aggregator
     """
     title = CharField(max_length=128)
-    url = CharField(max_length=512)
-    summary = CharField(max_length=1024)
+    url = CharField(max_length=512, unique=True)
+    summary = CharField(max_length=1024, unique=True)
     img = ImageField(upload_to='images/', default=None, blank=True, null=True)
     published_date = DateField(default=date.today)
     time_to_read = IntegerField(default=5)
