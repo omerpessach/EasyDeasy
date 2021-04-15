@@ -30,20 +30,19 @@ class SiteSerializer(ModelSerializer):
 class ArticleSerializer(ModelSerializer):
 
     def create(self, validated_data):
-        print(validated_data)
 
         # Updates the to generic image if possible
         if validated_data['img'] is None:
             # Gets First Disease in list
             disease: Disease = validated_data['diseases'][0]
 
-            image_folder = '/images/' + disease.category.name + '/'
-            folder_path = settings.MEDIA_ROOT + image_folder
+            image_folder = f'/images/{disease.category.name}/'
+            folder_path = f'{settings.MEDIA_ROOT}{image_folder}'
 
             # Selects random image
             random_image = random.choice(os.listdir(folder_path))
 
-            validated_data['img'] = image_folder + random_image
+            validated_data['img'] = f'{image_folder}{random_image}'
 
         return super(ArticleSerializer, self).create(validated_data)
 
