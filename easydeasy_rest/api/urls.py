@@ -9,7 +9,6 @@ router.register('diseases', views.DiseaseViewSet)
 router.register('sites', views.SiteViewSet)
 router.register('feeds', views.FeedViewSet)
 router.register('categories', views.CategoryViewSet)
-router.register('default_images', views.DefaultCategoryImageViewSet)
 
 urlpatterns = [
     path('', include(router.urls))
