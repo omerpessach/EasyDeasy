@@ -1,19 +1,34 @@
 from .models import Category, Feed, Site, Disease, Article
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, CharField
 from easydeasy_rest import settings
-import os, random
+import os
+import random
 
 
 class DiseaseSerializer(ModelSerializer):
+    category = CharField()
+
     class Meta:
         model = Disease
         fields = '__all__'
+
+    def create(self, validated_data):
+        category_value = validated_data['category']
+
+        if category_value.isnumeric():
+            validated_data['category'] = Category.objects.get(pk=int(category_value))
+
+        else:
+            validated_data['category'] = Category.objects.get(name=category_value)
+
+        return super().create(validated_data)
 
 
 class CategorySerializer(ModelSerializer):
     class Meta:
         model = Category
         fields = '__all__'
+
 
 class FeedSerializer(ModelSerializer):
     class Meta:
