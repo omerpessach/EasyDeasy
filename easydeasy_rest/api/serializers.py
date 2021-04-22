@@ -1,4 +1,4 @@
-from .models import Category, Feed, Site, Disease, Article
+from .models import Category, Feed, Site, Disease, Article, Model
 from rest_framework.serializers import ModelSerializer, CharField
 from easydeasy_rest import settings
 import os
@@ -15,11 +15,9 @@ class DiseaseSerializer(ModelSerializer):
     def create(self, validated_data):
         category_value = validated_data['category']
 
-        if category_value.isnumeric():
-            validated_data['category'] = Category.objects.get(pk=int(category_value))
+        kwargs = {'pk': int(category_value)} if category_value.isnumeric() else {'name': category_value}
 
-        else:
-            validated_data['category'] = Category.objects.get(name=category_value)
+        validated_data['category'] = Category.objects.get(**kwargs)
 
         return super().create(validated_data)
 
@@ -31,9 +29,20 @@ class CategorySerializer(ModelSerializer):
 
 
 class FeedSerializer(ModelSerializer):
+    source_site = CharField()
+
     class Meta:
         model = Feed
         fields = '__all__'
+
+    def create(self, validated_data):
+        source_site_value = validated_data['source_site']
+
+        kwargs = {'pk': int(source_site_value)} if source_site_value.isnumeric() else {'name': source_site_value}
+
+        validated_data['source_site'] = Site.objects.get(**kwargs)
+
+        return super().create(validated_data)
 
 
 class SiteSerializer(ModelSerializer):
