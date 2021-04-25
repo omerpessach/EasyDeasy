@@ -99,3 +99,6 @@ class Feed(Model):
     update_time = IntegerField(default=24)
 
     source_site = ForeignKey(Site, on_delete=CASCADE)
+
+    def __str__(self):
+        return f'{self.source_site.name} - {self.pk}'
