@@ -3,6 +3,18 @@ from rest_framework.serializers import ModelSerializer, CharField
 from easydeasy_rest import settings
 import os
 import random
+from typing import Type
+
+
+def handle_pk_or_str_post(validated_data: dict, value_key: str, model: Type[Model], serializer_key='name') -> dict:
+    """
+    Checks if the validated data wanted value is pk/different key and modifies the validated data to what's needed!
+    """
+    value = validated_data[value_key]
+    kwargs = {'pk': int(value)} if value.isnumeric() else {serializer_key: value}
+    validated_data[value_key] = model.objects.get(**kwargs)
+
+    return validated_data
 
 
 class DiseaseSerializer(ModelSerializer):
@@ -13,12 +25,7 @@ class DiseaseSerializer(ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        category_value = validated_data['category']
-
-        kwargs = {'pk': int(category_value)} if category_value.isnumeric() else {'name': category_value}
-
-        validated_data['category'] = Category.objects.get(**kwargs)
-
+        validated_data = handle_pk_or_str_post(validated_data, 'category', Category)
         return super().create(validated_data)
 
 
@@ -36,12 +43,7 @@ class FeedSerializer(ModelSerializer):
         fields = '__all__'
 
     def create(self, validated_data):
-        source_site_value = validated_data['source_site']
-
-        kwargs = {'pk': int(source_site_value)} if source_site_value.isnumeric() else {'name': source_site_value}
-
-        validated_data['source_site'] = Site.objects.get(**kwargs)
-
+        validated_data = handle_pk_or_str_post(validated_data, 'source_site', Site)
         return super().create(validated_data)
 
 
