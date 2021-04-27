@@ -79,7 +79,7 @@ class ArticleSerializer(ModelSerializer):
             # Gets First Disease in list
             disease: Disease = validated_data['diseases'][0]
 
-            image_folder = Path(f'/images/{disease.category.name}/')
+            image_folder = Path(f'/images/default_images/{disease.category.name}/')
             folder_path = Path(f'{settings.MEDIA_ROOT}{image_folder}')
 
             # Selects random image
