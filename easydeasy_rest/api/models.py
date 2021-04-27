@@ -33,7 +33,7 @@ class Site(Model):
     Supported sites which we aggregate information from
     """
     name = CharField(max_length=64, unique=True)
-    url = CharField(max_length=256)
+    url = CharField(max_length=256, unique=True)
 
     def __str__(self):
         return self.name
@@ -67,7 +67,7 @@ class Article(Model):
     """
     title = CharField(max_length=128)
     url = CharField(max_length=512, unique=True)
-    summary = CharField(max_length=1024, unique=True)
+    summary = CharField(max_length=1024)
     img = ImageField(upload_to='images/', default=None, blank=True, null=True)
     published_date = DateField(default=date.today)
     time_to_read = IntegerField(default=5)
@@ -94,7 +94,7 @@ class Feed(Model):
     Site contains feeds, each feed contains the exact url of the rss feed to parse and it's values relevant for
     the aggregator.
     """
-    url = CharField(max_length=512)
+    url = CharField(max_length=512, unique=True)
     missing_fields = CharField(max_length=128)
     update_time = IntegerField(default=24)
 
@@ -102,3 +102,15 @@ class Feed(Model):
 
     def __str__(self):
         return f'{self.source_site.name} - {self.pk}'
+
+
+class Research(Model):
+    """
+    Research object to contain real data for official researches
+    """
+    title = CharField(max_length=256, unique=True)
+    summary = CharField(max_length=512)
+    published_date = DateField(default=date.today)
+    authors = CharField(max_length=512)
+    url = CharField(max_length=512, unique=True)
+    pm_id = CharField(max_length=16, unique=True)
