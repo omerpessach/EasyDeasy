@@ -1,4 +1,4 @@
-from .models import Category, Feed, Site, Disease, Article, Model
+from .models import Category, Feed, Site, Disease, Article, Model, Research
 from rest_framework.serializers import ModelSerializer, CharField
 from easydeasy_rest import settings
 import os
@@ -92,3 +92,14 @@ class ArticleSerializer(ModelSerializer):
     class Meta:
         model = Article
         fields = '__all__'
+
+
+class ResearchSerializer(ModelSerializer):
+    class Meta:
+        model = Research
+        fields = '__all__'
+
+    def create(self, validated_data):
+        validated_data = handle_pk_or_str_post(validated_data, 'publisher', Site)
+        return super().create(validated_data)
+

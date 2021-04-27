@@ -1,6 +1,8 @@
 from datetime import date
 
-from django.db.models import Model, CASCADE, CharField, DateField, IntegerField, ManyToManyField, ForeignKey, ImageField
+from django.db.models import Model, CASCADE, CharField, DateField, IntegerField, ManyToManyField, ForeignKey,\
+    ImageField, BooleanField
+
 from api.utils import parse_image_name_from_path
 
 
@@ -34,6 +36,7 @@ class Site(Model):
     """
     name = CharField(max_length=64, unique=True)
     url = CharField(max_length=256, unique=True)
+    is_publisher = BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -114,3 +117,5 @@ class Research(Model):
     authors = CharField(max_length=512)
     url = CharField(max_length=512, unique=True)
     pm_id = CharField(max_length=16, unique=True)
+
+    publisher = ForeignKey(Site, on_delete=CASCADE)
