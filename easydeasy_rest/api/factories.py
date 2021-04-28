@@ -1,5 +1,5 @@
 import factory
-from api.models import Site, Category, Disease, Article, Feed
+from api.models import Site, Category, Disease, Article, Feed, Research
 from datetime import datetime
 import random
 
@@ -46,7 +46,7 @@ class ArticleFactory(factory.django.DjangoModelFactory):
 
     source_site = factory.Iterator(Site.objects.all())
 
-    title = factory.LazyAttribute(lambda _: f'article_{random.randrange(1000)}')
+    title = factory.LazyAttribute(lambda _: f'article_{random.randrange(100)}')
     url = factory.LazyAttribute(lambda article: f'www.{article.source_site.name}/articles/{article.title}.com')
     summary = factory.Faker('text')
     published_date = factory.LazyFunction(datetime.now)
@@ -56,6 +56,35 @@ class ArticleFactory(factory.django.DjangoModelFactory):
     likes = factory.Faker('random_element', elements=SOCIAL_AMOUNT)
     clicks = factory.Faker('random_element', elements=SOCIAL_AMOUNT)
     shares = factory.Faker('random_element', elements=SOCIAL_AMOUNT)
+
+    @factory.post_generation
+    def diseases(self, create, extracted, **kwargs):
+        if not create:
+            # Simple build, do nothing.
+            return
+
+        if extracted:
+            # A list of diseases were passed in, use them
+            for disease in extracted:
+                self.diseases.add(disease)
+
+
+class ResearchFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = Research
+
+    publisher = factory.Iterator(Site.objects.all())
+
+    title = factory.LazyAttribute(lambda _: f'research_{random.randrange(100)}')
+    summary = factory.Faker('text')
+    published_date = factory.LazyFunction(datetime.now)
+    authors = factory.LazyAttribute(lambda _: ','.join(random.choices(['Anat L', 'Daniel B', 'Moshe G', 'Kelly D',
+                                                                       'Stock R', 'Paz B', 'Paz Be', 'Almog E',
+                                                                       'Shimrit C', 'Fadid L', 'Alon H', 'Ran D',
+                                                                       'Roni K', 'Ido D', 'Omri G'],
+                                                                      k=random.randrange(6))))
+    url = factory.LazyAttribute(lambda research: f'www.{research.publisher.name}/researchs/{research.title}.com')
+    pm_id = factory.LazyAttribute(lambda _: str(random.randint(10000000, 99999999)))
 
     @factory.post_generation
     def diseases(self, create, extracted, **kwargs):

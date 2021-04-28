@@ -6,6 +6,9 @@ from .serializers import SiteSerializer, DiseaseSerializer, ArticleSerializer, \
     FeedSerializer, CategorySerializer, ResearchSerializer
 
 
+# todo override get_serializer_class for different serializers for GET/POST
+
+
 class SiteViewSet(ModelViewSet):
     queryset = Site.objects.all()
     serializer_class = SiteSerializer

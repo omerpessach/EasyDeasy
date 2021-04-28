@@ -118,4 +118,5 @@ class Research(Model):
     url = CharField(max_length=512, unique=True)
     pm_id = CharField(max_length=16, unique=True)
 
-    publisher = ForeignKey(Site, on_delete=CASCADE)
+    publisher = ForeignKey(Site, on_delete=CASCADE, related_name='researches')
+    diseases = ManyToManyField(Disease)

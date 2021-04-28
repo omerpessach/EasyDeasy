@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from api.factories import ArticleFactory, DiseaseFactory, CategoryFactory, SiteFactory, FeedFactory
+from api.factories import ArticleFactory, DiseaseFactory, CategoryFactory, SiteFactory, FeedFactory, ResearchFactory
 from api.models import Disease
 import random
 from django.db.utils import IntegrityError
@@ -10,6 +10,7 @@ from django.db.utils import IntegrityError
 # region consts
 
 ARTICLE_AMOUNT = 50
+RESEARCH_AMOUNT = 20
 DISEASE_AMOUNT = 15
 SITE_AMOUNT = 10
 FEED_AMOUNT = 20
@@ -30,20 +31,22 @@ class Command(BaseCommand):
 
         self.call_factory(FeedFactory, FEED_AMOUNT)
 
-        self.call_factory(ArticleFactory, ARTICLE_AMOUNT, is_article=True)
+        self.call_factory(ArticleFactory, ARTICLE_AMOUNT, has_diseases=True)
+
+        self.call_factory(ResearchFactory, RESEARCH_AMOUNT, has_diseases=True)
 
     @staticmethod
-    def call_factory(factory, amount, is_article=False):
+    def call_factory(factory, amount, has_diseases=False):
         """
         Calls the factory amount times and creates new instances for the database.
-        :param is_article: If it's article factory
+        :param has_diseases: If the factory has diseases needed to be attached to it
         :param factory: The factory to call
         :param amount: Amount of instances to create
         """
         for _ in range(amount):
             try:
-                if is_article:
-                    factory.create(diseases=(random.choices(Disease.objects.all(), k=random.randrange(3))))
+                if has_diseases:
+                    factory.create(diseases=(random.choices(Disease.objects.all(), k=random.randrange(1, 4))))
                 else:
                     factory.create()
             except IntegrityError as e:

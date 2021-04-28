@@ -1,5 +1,5 @@
 from .models import Category, Feed, Site, Disease, Article, Model, Research
-from rest_framework.serializers import ModelSerializer, CharField
+from rest_framework.serializers import ModelSerializer, CharField, ListField
 from easydeasy_rest import settings
 import os
 import random
@@ -7,27 +7,19 @@ from typing import Type
 from pathlib import Path
 
 
-def handle_pk_or_str_post(validated_data: dict, value_key: str, model: Type[Model], serializer_key='name', many=False):
+def handle_pk_or_str_post(validated_data: dict, value_key: str, model: Type[Model], serializer_key='name'):
     """
     Checks if the validated data wanted value is pk/different key and modifies the validated data to what's needed!
     """
     value = validated_data[value_key]
 
-    already_validated = many and all(type(item) is not str for item in value) or not many and type(value) is not str
+    already_validated = type(value) is not str
 
     if already_validated:
         return validated_data
 
-    if many:
-        kwargs_list = [{'pk': int(instance_value)} for instance_value in value] \
-            if all(item.isnumeric() for item in value) \
-            else [{serializer_key: instance_value} for instance_value in value]
-
-        validated_data[value_key] = [model.objects.get(kwargs) for kwargs in kwargs_list]
-
-    else:
-        kwargs = {'pk': int(value)} if value.isnumeric() else {serializer_key: value}
-        validated_data[value_key] = model.objects.get(**kwargs)
+    kwargs = {'pk': int(value)} if value.isnumeric() else {serializer_key: value}
+    validated_data[value_key] = model.objects.get(**kwargs)
 
     return validated_data
 
@@ -71,8 +63,6 @@ class SiteSerializer(ModelSerializer):
 class ArticleSerializer(ModelSerializer):
 
     def create(self, validated_data):
-        validated_data = handle_pk_or_str_post(validated_data, 'source_site', Site)
-        validated_data = handle_pk_or_str_post(validated_data, 'diseases', Disease, many=True)
 
         # Updates the to generic image if possible
         if validated_data['img'] is None:
@@ -95,6 +85,8 @@ class ArticleSerializer(ModelSerializer):
 
 
 class ResearchSerializer(ModelSerializer):
+    publisher = CharField()
+
     class Meta:
         model = Research
         fields = '__all__'
