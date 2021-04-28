@@ -1,10 +1,12 @@
 from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from .models import Category, Feed, Site, Disease, Article
+from .models import Category, Feed, Site, Disease, Article, Research
 from .serializers import SiteSerializer, DiseaseSerializer, ArticleSerializer, \
-    FeedSerializer, CategorySerializer
+    FeedSerializer, CategorySerializer, ResearchSerializer
+
+
+# todo override get_serializer_class for different serializers for GET/POST
 
 
 class SiteViewSet(ModelViewSet):
@@ -18,10 +20,11 @@ class DiseaseViewSet(ModelViewSet):
 
     @action(detail=False, url_path='(?P<url_disease_id>[0-9]+)/latest_articles')
     def latest_disease_articles(self, request, url_disease_id):
-        """ returns the list of newest articles.
+        """
+        returns the list of newest articles for specific disease.
 
-            (?P<url_disease_id>[0-9]+) in the decorator forces to only receive ints for url_disease_id.
-            """
+        (?P<url_disease_id>[0-9]+) in the decorator forces to only receive ints for url_disease_id.
+        """
 
         # Converts string url to int
         disease_id = int(url_disease_id)
@@ -49,6 +52,12 @@ class FeedViewSet(ModelViewSet):
     queryset = Feed.objects.all()
     serializer_class = FeedSerializer
 
+
 class CategoryViewSet(ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
+
+
+class ResearchViewSet(ModelViewSet):
+    queryset = Research.objects.all()
+    serializer_class = ResearchSerializer
